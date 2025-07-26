@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buy Tickets - KCC MULTIPLEX</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <style>
+      /* General Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Header Styles */
+      header {
+        background-color: #000;
+        color: white;
+        padding: 15px 0;
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      /* Progress Steps */
+      .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        margin: 30px 0;
+        position: relative;
+      }
+
+      .progress-steps::before {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #ddd;
+        z-index: 1;
+      }
+
+      .step {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        flex: 1;
+      }
+
+      .step-number {
+        width: 30px;
+        height: 30px;
+        background-color: #ddd;
+        color: #777;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        font-weight: bold;
+      }
+
+      .step.active .step-number {
+        background-color: #e2a00a;
+        color: white;
+      }
+
+      .step-label {
+        font-weight: bold;
+        color: #777;
+        white-space: nowrap;
+      }
+
+      .step.active .step-label {
+        color: #e2a00a;
+      }
+
+      /* Form Sections */
+      .form-section {
+        display: none;
+        background-color: white;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-section.active {
+        display: block;
+      }
+
+      .form-section h2 {
+        color: #e2a00a;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+
+      .form-section h3 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+      }
+
+      /* Date Selection */
+      .date-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .date-option {
+        flex: 1 0 calc(14.28% - 10px);
+        min-width: 100px;
+        text-align: center;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .date-option:hover {
+        border-color: #e2a00a;
+      }
+
+      .date-option.active {
+        background-color: #e2a00a;
+        color: white;
+        border-color: #e2a00a;
+      }
+
+      .date-option.today {
+        border: 2px solid #e2a00a;
+        font-weight: bold;
+      }
+
+      /* Movie Selection */
+      /* Updated movie options styling */
+      .movie-options {
+        display: grid;
+        grid-template-columns: repeat(
+          auto-fill,
+          minmax(300px, 1fr)
+        ); /* Wider boxes */
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .movie-option {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        white-space: nowrap; /* Prevent line breaks */
+        overflow: hidden; /* Hide overflow */
+        text-overflow: ellipsis; /* Add ellipsis if text is too long */
+      }
+
+      .movie-option:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .movie-option.active {
+        border: 2px solid #e2a00a;
+      }
+
+      .movie-poster {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+      }
+
+      .movie-title {
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      /* Cinema Selection */
+      .cinema-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .cinema-option {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .cinema-option:hover {
+        border-color: #e2a00a;
+      }
+
+      .cinema-option.active {
+        border: 2px solid #e2a00a;
+        background-color: #f9f9f9;
+      }
+
+      .cinema-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .cinema-tech {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      /* Showtime Selection */
+      .showtime-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .showtime-option {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .showtime-option:hover {
+        border-color: #e2a00a;
+      }
+
+      .showtime-option.active {
+        border: 2px solid #e2a00a;
+        background-color: #f9f9f9;
+      }
+
+      /* Your Details Section */
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #e2a00a;
+      }
+
+      .phone-input {
+        display: flex;
+        align-items: center;
+      }
+
+      .phone-prefix {
+        padding: 12px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-right: none;
+        border-radius: 5px 0 0 5px;
+      }
+
+      .phone-input input {
+        border-radius: 0 5px 5px 0;
+      }
+
+      /* Seat Selection Section */
+      .movie-info {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+
+      .screen {
+        text-align: center;
+        margin: 30px 0;
+        padding: 10px;
+        background-color: #333;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+      }
+
+      .seat-map {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .seat-row {
+        display: flex;
+        margin-bottom: 10px;
+      }
+
+      .seat {
+        width: 40px;
+        height: 40px;
+        margin: 0 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #4caf50;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .seat.selected {
+        background-color: #e2a00a;
+      }
+
+      .seat.unavailable {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .seat.restricted {
+        background-color: #f44336;
+      }
+
+      .seat.temp-unavailable {
+        background-color: #ff9800;
+      }
+
+      .seat:hover:not(.unavailable):not(.selected) {
+        background-color: #45a049;
+      }
+
+      .seat-legend {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+      }
+
+      .legend-color {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        border-radius: 3px;
+      }
+
+      /* Attendee Selection */
+      .attendee-selection {
+        margin-bottom: 20px;
+      }
+
+      .attendee-controls {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .attendee-label {
+        flex: 1;
+        font-weight: bold;
+      }
+
+      .attendee-count {
+        display: flex;
+        align-items: center;
+      }
+
+      .count-btn {
+        width: 30px;
+        height: 30px;
+        background-color: #e2a00a;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .count-value {
+        margin: 0 15px;
+        min-width: 30px;
+        text-align: center;
+      }
+
+      /* Ticket Summary */
+      .ticket-summary {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+
+      .ticket-summary h3 {
+        color: #e2a00a;
+        margin-bottom: 15px;
+      }
+
+      .ticket-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+      }
+
+      .ticket-table th,
+      .ticket-table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .ticket-table th {
+        font-weight: bold;
+      }
+
+      .total-row {
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      /* Navigation Buttons */
+      .nav-buttons {
+        margin-top: 30px;
+      }
+
+      .nav-button {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 10px 0;
+      }
+
+      .nav-button.prev {
+        background-color: #f0f0f0;
+        color: #333;
+      }
+
+      .nav-button.next {
+        background-color: #e2a00a;
+        color: white;
+      }
+
+      .nav-button.next:disabled {
+        background-color: #ddd;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
+      .nav-button:hover:not(:disabled) {
+        opacity: 0.9;
+      }
+
+      /* Summary Section */
+      .summary-section {
+        display: none;
+        background-color: white;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .summary-section.active {
+        display: block;
+      }
+
+      .summary-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .time-left {
+        background-color: #e2a00a;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      .summary-table th,
+      .summary-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      .summary-table th {
+        font-weight: bold;
+        width: 30%;
+      }
+
+      .summary-notice {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+        font-size: 0.9rem;
+      }
+
+      .checkbox-group {
+        margin: 20px 0;
+      }
+
+      .checkbox-item {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      .checkbox-item input {
+        margin-right: 10px;
+      }
+
+      .payment-button {
+        background-color: #e2a00a;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .payment-button:hover {
+        opacity: 0.9;
+      }
+
+      .payment-details {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        .progress-steps {
+          flex-wrap: wrap;
+        }
+
+        .step {
+          flex: 1 0 50%;
+          margin-bottom: 15px;
+        }
+
+        .date-option {
+          flex: 1 0 calc(33.33% - 10px);
+        }
+
+        .movie-options,
+        .cinema-options,
+        .showtime-options {
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+
+        .seat {
+          width: 30px;
+          height: 30px;
+          font-size: 0.8rem;
+        }
+
+        .summary-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .time-left {
+          margin-top: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>KCC MULTIPLEX</h1>
+        <h2>Buy Tickets</h2>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- Progress Steps -->
+      <div class="progress-steps">
+        <div class="step active" data-step="1">
+          <div class="step-number">1</div>
+          <div class="step-label">Pick a Movie</div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-number">2</div>
+          <div class="step-label">Your Details</div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-number">3</div>
+          <div class="step-label">Pick a Seat</div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-number">4</div>
+          <div class="step-label">Summary</div>
+        </div>
+      </div>
+
+      <!-- Step 1: Movie Selection (Active) -->
+      <div class="form-section active" id="step1">
+        <h2>Select your movie experience</h2>
+
+        <!-- Date Selection (always visible) -->
+        <div id="date-selection">
+          <h3>1. Select a date</h3>
+          <div class="date-options">
+            <!-- Dates will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Movie Selection (hidden initially) -->
+        <div id="movie-selection" style="display: none">
+          <h3>2. Select a movie</h3>
+          <div class="movie-options">
+            <div class="movie-option">
+              <div class="movie-title">ගෞනාතය ගෞනාවලි | Thalawan Thalawi</div>
+            </div>
+            <div class="movie-option">
+              <div class="movie-title">How to Train Your Dragon 3D</div>
+            </div>
+            <div class="movie-option">
+              <div class="movie-title">Jurassic World Rebirth 3D</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cinema Selection (hidden initially) -->
+        <div id="cinema-selection" style="display: none">
+          <h3>3. Select a cinema</h3>
+          <div class="cinema-options">
+            <div class="cinema-option">
+              <div class="cinema-name">C1 - Dolby Atmos</div>
+              <div class="cinema-tech">4K Digital Projection</div>
+            </div>
+            <div class="cinema-option">
+              <div class="cinema-name">C2 - Dolby 7.1</div>
+              <div class="cinema-tech">2K Laser Projection</div>
+            </div>
+            <div class="cinema-option">
+              <div class="cinema-name">C3 - Dolby 7.1</div>
+              <div class="cinema-tech">2K Laser Projection</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Showtime Selection (hidden initially) -->
+        <div id="showtime-selection" style="display: none">
+          <h3>4. Select a showtime</h3>
+          <div class="showtime-options">
+            <div class="showtime-option">10:00 AM</div>
+            <div class="showtime-option">1:15 PM</div>
+            <div class="showtime-option">4:30 PM</div>
+            <div class="showtime-option">7:45 PM</div>
+            <div class="showtime-option">10:00 PM</div>
+          </div>
+        </div>
+
+        <!-- Next button (hidden initially) -->
+        <div class="nav-buttons">
+          <button
+            class="nav-button next"
+            id="step1ToStep2"
+            style="display: none"
+          >
+            Continue to Your Details <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Your Details (Hidden) -->
+      <div class="form-section" id="step2">
+        <h2>Your Details</h2>
+
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input
+            type="text"
+            id="name"
+            placeholder="Please enter your name here"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Your Email</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Please enter a valid email address"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Your Mobile No</label>
+          <div class="phone-input">
+            <span class="phone-prefix">+94</span>
+            <input
+              type="tel"
+              id="phone"
+              placeholder="Enter your mobile number"
+            />
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="nav-button prev" id="prevToStep1">
+            <i class="bi bi-chevron-left"></i> Previous
+          </button>
+          <button class="nav-button next" id="nextToStep3" disabled>
+            Next <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Seat Selection (Hidden) -->
+      <div class="form-section" id="step3">
+        <div class="movie-info">
+          <h3 id="selected-movie-title">Movie Title</h3>
+          <p id="selected-showtime-info">Cinema - Date - Time</p>
+        </div>
+
+        <div class="attendee-selection">
+          <div class="attendee-controls">
+            <div class="attendee-label">Adults</div>
+            <div class="attendee-count">
+              <button class="count-btn minus" data-type="adult">-</button>
+              <span class="count-value" id="adult-count">0</span>
+              <button class="count-btn plus" data-type="adult">+</button>
+            </div>
+          </div>
+
+          <div class="attendee-controls">
+            <div class="attendee-label">Children</div>
+            <div class="attendee-count">
+              <button class="count-btn minus" data-type="child">-</button>
+              <span class="count-value" id="child-count">0</span>
+              <button class="count-btn plus" data-type="child">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="seat-legend" style="margin-bottom: 0">
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #e2a00a"></div>
+            <span>Selected</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #4caf50"></div>
+            <span>Available</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #f44336"></div>
+            <span>Restricted</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #ff9800"></div>
+            <span>Temporary Unavailable</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #ccc"></div>
+            <span>Unavailable</span>
+          </div>
+        </div>
+        <div class="screen">SCREEN</div>
+
+        <div class="seat-map">
+          <!-- Row A -->
+          <div class="seat-row">
+            <div class="seat">A1</div>
+            <div class="seat">A2</div>
+            <div class="seat">A3</div>
+            <div class="seat">A4</div>
+            <div class="seat">A5</div>
+            <div class="seat">A6</div>
+            <div class="seat">A7</div>
+            <div class="seat">A8</div>
+            <div class="seat">A9</div>
+            <div class="seat">A10</div>
+          </div>
+
+          <!-- Row B -->
+          <div class="seat-row">
+            <div class="seat">B1</div>
+            <div class="seat">B2</div>
+            <div class="seat unavailable">B3</div>
+            <div class="seat">B4</div>
+            <div class="seat restricted">B5</div>
+            <div class="seat">B6</div>
+            <div class="seat temp-unavailable">B7</div>
+            <div class="seat">B8</div>
+            <div class="seat">B9</div>
+            <div class="seat">B10</div>
+          </div>
+
+          <!-- Row C -->
+          <div class="seat-row">
+            <div class="seat">C1</div>
+            <div class="seat">C2</div>
+            <div class="seat">C3</div>
+            <div class="seat">C4</div>
+            <div class="seat">C5</div>
+            <div class="seat">C6</div>
+            <div class="seat">C7</div>
+            <div class="seat unavailable">C8</div>
+            <div class="seat">C9</div>
+            <div class="seat">C10</div>
+          </div>
+
+          <!-- Row Numbers -->
+          <div class="seat-row" style="margin-top: 20px">
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >01</span
+            >
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >02</span
+            >
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >03</span
+            >
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >04</span
+            >
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >05</span
+            >
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >06</span
+            >
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >07</span
+            >
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >08</span
+            >
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >09</span
+            >
+            <span style="width: 40px; margin: 0 5px; text-align: center"
+              >10</span
+            >
+          </div>
+        </div>
+
+        <div class="weather-info">27°C - Mostly cloudy</div>
+
+        <div class="ticket-summary">
+          <h3 id="ticket-count-message">
+            0 ticket(s) selected. Please select attendees
+          </h3>
+
+          <table class="ticket-table">
+            <thead>
+              <tr>
+                <th>Adults</th>
+                <th>Ticket Price</th>
+                <th>Online fee</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="adult-ticket-count">0</td>
+                <td>1700</td>
+                <td>50</td>
+                <td id="adult-subtotal">0</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="ticket-table">
+            <thead>
+              <tr>
+                <th>Children</th>
+                <th>Ticket Price</th>
+                <th>Online fee</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="child-ticket-count">0</td>
+                <td>1550</td>
+                <td>50</td>
+                <td id="child-subtotal">0</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="total-row">
+            Total: LKR <span id="total-amount">0</span> (VAT Included: LKR
+            <span id="vat-amount">0</span>)
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="nav-button prev" id="prevToStep2">
+            <i class="bi bi-chevron-left"></i> Previous
+          </button>
+          <button class="nav-button next" id="nextToStep4" disabled>
+            Next <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 4: Summary (Hidden) -->
+      <div class="summary-section" id="step4">
+        <div class="summary-header">
+          <h2>Summary <span class="time-left" id="timeLeft">01:30</span></h2>
+        </div>
+
+        <table class="summary-table">
+          <tr>
+            <th>Date</th>
+            <td id="summary-date">26-07-2025 - Saturday</td>
+          </tr>
+          <tr>
+            <th>Movie</th>
+            <td id="summary-movie">How to Train Your Dragon 3D</td>
+          </tr>
+          <tr>
+            <th>Cinema</th>
+            <td id="summary-cinema">C2 - Dolby 7.1</td>
+          </tr>
+          <tr>
+            <th>Showtime</th>
+            <td id="summary-showtime">1:15 PM</td>
+          </tr>
+        </table>
+
+        <h3>Your details</h3>
+        <table class="summary-table">
+          <tr>
+            <th>Name</th>
+            <td id="summary-name">fvdx</td>
+          </tr>
+          <tr>
+            <th>Phone Number</th>
+            <td id="summary-phone">+94752735746</td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td id="summary-email">sonda@gmail.com</td>
+          </tr>
+        </table>
+
+        <h3>Ticket details (<span id="summary-ticket-count">1</span>)</h3>
+        <table class="summary-table">
+          <tr>
+            <th>Tickets</th>
+            <td id="summary-tickets">1</td>
+          </tr>
+          <tr>
+            <th>Seats</th>
+            <td id="summary-seats">B4</td>
+          </tr>
+          <tr>
+            <th>Adults</th>
+            <td id="summary-adults">1 x (LKR 1,700 + 50) - LKR 1,750</td>
+          </tr>
+          <tr>
+            <th>Children</th>
+            <td id="summary-children">0 x (LKR 1,550 + 50) - LKR 0</td>
+          </tr>
+        </table>
+
+        <div class="total-row">
+          Total: <span id="summary-total">LKR 1,750</span>
+        </div>
+
+        <div class="summary-notice">
+          <p>
+            <strong
+              >TICKETS ONCE SOLD ARE NOT EXCHANGEABLE, TRANSFERRABLE NOR
+              REFUNDABLE.</strong
+            >
+          </p>
+          <p>
+            By clicking on 'Card payments' you will be redirected to the bank
+            payment gateway website. Once the payment is successfully completed
+            you will receive an SMS confirmation and email with your ticket(s)
+            attached.
+          </p>
+        </div>
+
+        <div class="checkbox-group">
+          <div class="checkbox-item">
+            <input type="checkbox" id="promotions" />
+            <label for="promotions"
+              >Yes! I would like to receive email updates on new promotions,
+              announcements and more.</label
+            >
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="terms" required />
+            <label for="terms"
+              >I have read and agree to the website terms and conditions</label
+            >
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="nav-button prev" id="prevToStep3">
+            <i class="bi bi-chevron-left"></i> Previous
+          </button>
+          <button class="payment-button" id="paymentBtn">
+            <i class="bi bi-credit-card"></i> Card payments
+            <span id="paymentTimer">(01:30)</span>
+          </button>
+        </div>
+
+        <div class="payment-details">
+          <p><strong>Additional</strong></p>
+          <p id="additional-details">1 x (LKR 1,700 + 50) - LKR 1,750</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Global variables to store selections
+        const selections = {
+          date: null,
+          movie: null,
+          cinema: null,
+          showtime: null,
+          name: "",
+          email: "",
+          phone: "",
+          adults: 0,
+          children: 0,
+          seats: [],
+        };
+
+        // Step 1 selection variables
+        let selectedDate = null;
+        let selectedMovie = null;
+        let selectedCinema = null;
+        let selectedShowtime = null;
+
+        // Timer variables
+        let timeLeft = 90; // 1.5 minutes in seconds
+        let timerInterval;
+
+        // Navigation functions
+        function goToStep(stepNumber) {
+          // Hide all steps
+          document
+            .querySelectorAll(".form-section, .summary-section")
+            .forEach((section) => {
+              section.classList.remove("active");
+            });
+
+          // Show selected step
+          document.getElementById(`step${stepNumber}`).classList.add("active");
+
+          // Update progress steps
+          document.querySelectorAll(".step").forEach((step) => {
+            step.classList.remove("active");
+          });
+          document
+            .querySelector(`[data-step="${stepNumber}"]`)
+            .classList.add("active");
+
+          // Start timer if on summary page
+          if (stepNumber === 4) {
+            updateSummaryInfo();
+            startTimer();
+          } else {
+            clearTimer();
+          }
+        }
+
+        // Timer functions
+        function startTimer() {
+          clearTimer(); // Clear any existing timer
+          timeLeft = 90; // Reset to 1.5 minutes
+
+          timerInterval = setInterval(() => {
+            updateTimer();
+
+            if (timeLeft <= 0) {
+              clearTimer();
+              alert("Your session has expired. Please start over.");
+              goToStep(1); // Return to step 1
+            }
+          }, 1000);
+
+          updateTimer(); // Initial call
+        }
+
+        function updateTimer() {
+          const minutes = Math.floor(timeLeft / 60);
+          const seconds = timeLeft % 60;
+          document.getElementById("timeLeft").textContent = `${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+          document.getElementById("paymentTimer").textContent = `(${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")})`;
+          timeLeft--;
+        }
+
+        function clearTimer() {
+          if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+          }
+        }
+
+        // Update summary information
+        function updateSummaryInfo() {
+          document.getElementById("summary-date").textContent = selections.date;
+          document.getElementById("summary-movie").textContent =
+            selections.movie;
+          document.getElementById("summary-cinema").textContent =
+            selections.cinema;
+          document.getElementById("summary-showtime").textContent =
+            selections.showtime;
+          document.getElementById("summary-name").textContent = selections.name;
+          document.getElementById("summary-phone").textContent =
+            selections.phone;
+          document.getElementById("summary-email").textContent =
+            selections.email;
+          document.getElementById("summary-ticket-count").textContent =
+            selections.adults + selections.children;
+          document.getElementById("summary-tickets").textContent =
+            selections.adults + selections.children;
+
+          // Get selected seats
+          const selectedSeatsList = selections.seats.join(", ");
+          document.getElementById("summary-seats").textContent =
+            selectedSeatsList;
+
+          // Calculate and display totals
+          const adultSubtotal = selections.adults * 1700;
+          const childSubtotal = selections.children * 1550;
+          const adultTotal = adultSubtotal + selections.adults * 50;
+          const childTotal = childSubtotal + selections.children * 50;
+          const grandTotal = adultTotal + childTotal;
+
+          document.getElementById("summary-adults").textContent = `${
+            selections.adults
+          } x (LKR 1,700 + 50) - LKR ${adultTotal.toLocaleString()}`;
+          document.getElementById("summary-children").textContent = `${
+            selections.children
+          } x (LKR 1,550 + 50) - LKR ${childTotal.toLocaleString()}`;
+          document.getElementById(
+            "summary-total"
+          ).textContent = `LKR ${grandTotal.toLocaleString()}`;
+          document.getElementById("additional-details").textContent = `${
+            selections.adults + selections.children
+          } x (LKR ${
+            selections.adults > 0 ? "1,700" : "1,550"
+          } + 50) - LKR ${grandTotal.toLocaleString()}`;
+        }
+
+        // Step 1: Sequential selection process
+
+        // Generate dates for the next 7 days
+        function generateDateOptions() {
+          const dateOptionsContainer = document.querySelector(".date-options");
+          dateOptionsContainer.innerHTML = "";
+
+          const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+          const months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ];
+
+          const today = new Date();
+
+          for (let i = 0; i < 7; i++) {
+            const date = new Date();
+            date.setDate(today.getDate() + i);
+
+            const dayName = days[date.getDay()];
+            const dayNum = date.getDate();
+            const monthName = months[date.getMonth()];
+
+            const dateElement = document.createElement("div");
+            dateElement.className = "date-option";
+            if (i === 0) {
+              dateElement.classList.add("today");
+            }
+
+            dateElement.textContent = `${dayName}, ${dayNum} ${monthName}`;
+
+            dateElement.addEventListener("click", function () {
+              // Remove active class from all date options
+              document
+                .querySelectorAll(".date-option")
+                .forEach((opt) => opt.classList.remove("active"));
+
+              // Add active class to clicked date
+              this.classList.add("active");
+
+              // Store selected date
+              selectedDate = this.textContent;
+              selections.date = selectedDate;
+
+              // Show movie selection
+              document.getElementById("movie-selection").style.display =
+                "block";
+
+              // Hide cinema and showtime selections if they were shown
+              document.getElementById("cinema-selection").style.display =
+                "none";
+              document.getElementById("showtime-selection").style.display =
+                "none";
+
+              // Hide next button
+              document.getElementById("step1ToStep2").style.display = "none";
+
+              // Reset subsequent selections
+              selectedMovie = null;
+              selectedCinema = null;
+              selectedShowtime = null;
+            });
+
+            dateOptionsContainer.appendChild(dateElement);
+          }
+        }
+
+        // Movie selection
+        const movieOptions = document.querySelectorAll(".movie-option");
+        movieOptions.forEach((option) => {
+          option.addEventListener("click", function () {
+            movieOptions.forEach((opt) => opt.classList.remove("active"));
+            this.classList.add("active");
+            selectedMovie = this.querySelector(".movie-title").textContent;
+            selections.movie = selectedMovie;
+
+            // Show cinema selection
+            document.getElementById("cinema-selection").style.display = "block";
+
+            // Hide showtime selection if it was shown
+            document.getElementById("showtime-selection").style.display =
+              "none";
+
+            // Hide next button
+            document.getElementById("step1ToStep2").style.display = "none";
+
+            // Reset subsequent selections
+            selectedCinema = null;
+            selectedShowtime = null;
+
+            // Update seat selection page
+            document.getElementById("selected-movie-title").textContent =
+              selectedMovie;
+          });
+        });
+
+        // Cinema selection
+        const cinemaOptions = document.querySelectorAll(".cinema-option");
+        cinemaOptions.forEach((option) => {
+          option.addEventListener("click", function () {
+            cinemaOptions.forEach((opt) => opt.classList.remove("active"));
+            this.classList.add("active");
+            selectedCinema = this.querySelector(".cinema-name").textContent;
+            selections.cinema = selectedCinema;
+
+            // Show showtime selection
+            document.getElementById("showtime-selection").style.display =
+              "block";
+
+            // Hide next button
+            document.getElementById("step1ToStep2").style.display = "none";
+
+            // Reset subsequent selection
+            selectedShowtime = null;
+
+            // Update seat selection page
+            document.getElementById(
+              "selected-showtime-info"
+            ).textContent = `${selectedCinema} - ${selectedDate} - ${
+              selectedShowtime || "Time"
+            }`;
+          });
+        });
+
+        // Showtime selection
+        const showtimeOptions = document.querySelectorAll(".showtime-option");
+        showtimeOptions.forEach((option) => {
+          option.addEventListener("click", function () {
+            showtimeOptions.forEach((opt) => opt.classList.remove("active"));
+            this.classList.add("active");
+            selectedShowtime = this.textContent;
+            selections.showtime = selectedShowtime;
+
+            // Show next button
+            document.getElementById("step1ToStep2").style.display = "block";
+
+            // Update seat selection page
+            document.getElementById(
+              "selected-showtime-info"
+            ).textContent = `${selectedCinema} - ${selectedDate} - ${selectedShowtime}`;
+          });
+        });
+
+        // Next button from Step 1 to Step 2
+        document
+          .getElementById("step1ToStep2")
+          .addEventListener("click", function () {
+            goToStep(2);
+          });
+
+        // Initialize date options on page load
+        generateDateOptions();
+        // Seat selection
+        const seats = document.querySelectorAll(
+          ".seat:not(.unavailable):not(.restricted):not(.temp-unavailable)"
+        );
+        seats.forEach((seat) => {
+          seat.addEventListener("click", function () {
+            this.classList.toggle("selected");
+            updateSeatSelection();
+          });
+        });
+
+        function updateSeatSelection() {
+          const selectedSeats = document.querySelectorAll(".seat.selected");
+          selections.seats = Array.from(selectedSeats).map(
+            (seat) => seat.textContent
+          );
+
+          const totalSelected = selectedSeats.length;
+          const totalTickets = selections.adults + selections.children;
+
+          // Update ticket count message
+          const ticketMessage = document.getElementById("ticket-count-message");
+          if (totalTickets === 0) {
+            ticketMessage.textContent =
+              "0 ticket(s) selected. Please select attendees";
+          } else if (totalSelected < totalTickets) {
+            ticketMessage.textContent = `Please select ${totalTickets} seat(s) (${totalSelected} selected)`;
+          } else {
+            ticketMessage.textContent = `${totalTickets} ticket(s) selected`;
+          }
+
+          // Calculate and update pricing
+          const adultSubtotal = selections.adults * 1700;
+          const childSubtotal = selections.children * 1550;
+          const adultTotal = adultSubtotal + selections.adults * 50;
+          const childTotal = childSubtotal + selections.children * 50;
+          const grandTotal = adultTotal + childTotal;
+          const vatAmount = Math.round(grandTotal * 0.15);
+
+          document.getElementById("adult-ticket-count").textContent =
+            selections.adults;
+          document.getElementById("child-ticket-count").textContent =
+            selections.children;
+          document.getElementById("adult-subtotal").textContent = adultSubtotal;
+          document.getElementById("child-subtotal").textContent = childSubtotal;
+          document.getElementById("total-amount").textContent = grandTotal;
+          document.getElementById("vat-amount").textContent = vatAmount;
+
+          // Enable/disable next button
+          const nextToStep4 = document.getElementById("nextToStep4");
+          if (totalTickets > 0 && totalSelected === totalTickets) {
+            nextToStep4.disabled = false;
+          } else {
+            nextToStep4.disabled = true;
+          }
+        }
+
+        // Attendee count controls
+        const adultCountElement = document.getElementById("adult-count");
+        const childCountElement = document.getElementById("child-count");
+
+        document.querySelectorAll(".count-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const type = this.getAttribute("data-type");
+            const isPlus = this.classList.contains("plus");
+
+            if (type === "adult") {
+              selections.adults = isPlus
+                ? selections.adults + 1
+                : Math.max(0, selections.adults - 1);
+              adultCountElement.textContent = selections.adults;
+            } else {
+              selections.children = isPlus
+                ? selections.children + 1
+                : Math.max(0, selections.children - 1);
+              childCountElement.textContent = selections.children;
+            }
+
+            updateSeatSelection();
+          });
+        });
+
+        // Payment button
+        const paymentBtn = document.getElementById("paymentBtn");
+        const termsCheckbox = document.getElementById("terms");
+
+        paymentBtn.addEventListener("click", function () {
+          if (!termsCheckbox.checked) {
+            alert("Please agree to the terms and conditions");
+            return;
+          }
+
+          // In a real app, would redirect to payment gateway
+          alert("Redirecting to payment gateway...");
+        });
+
+        // Your Details form
+        const nameInput = document.getElementById("name");
+        const emailInput = document.getElementById("email");
+        const phoneInput = document.getElementById("phone");
+        const nextToStep3 = document.getElementById("nextToStep3");
+
+        function validateDetailsForm() {
+          const isValid =
+            nameInput.value && emailInput.value && phoneInput.value;
+          nextToStep3.disabled = !isValid;
+          return isValid;
+        }
+
+        nameInput.addEventListener("input", function () {
+          selections.name = this.value;
+          validateDetailsForm();
+        });
+
+        emailInput.addEventListener("input", function () {
+          selections.email = this.value;
+          validateDetailsForm();
+        });
+
+        phoneInput.addEventListener("input", function () {
+          selections.phone = "+94" + this.value;
+          validateDetailsForm();
+        });
+
+        // Navigation event listeners
+        document
+          .getElementById("prevToStep1")
+          .addEventListener("click", function () {
+            goToStep(1);
+          });
+
+        document
+          .getElementById("nextToStep3")
+          .addEventListener("click", function () {
+            if (validateDetailsForm()) {
+              goToStep(3);
+            }
+          });
+
+        document
+          .getElementById("prevToStep2")
+          .addEventListener("click", function () {
+            goToStep(2);
+          });
+
+        document
+          .getElementById("nextToStep4")
+          .addEventListener("click", function () {
+            const totalTickets = selections.adults + selections.children;
+            const selectedSeats =
+              document.querySelectorAll(".seat.selected").length;
+
+            if (totalTickets === 0) {
+              alert("Please select at least one ticket");
+              return;
+            }
+
+            if (selectedSeats < totalTickets) {
+              alert(
+                `Please select ${totalTickets} seat(s) (${selectedSeats} selected)`
+              );
+              return;
+            }
+
+            goToStep(4);
+          });
+
+        document
+          .getElementById("prevToStep3")
+          .addEventListener("click", function () {
+            goToStep(3);
+          });
+
+        // Reset timer on any user interaction
+        document.addEventListener("click", function () {
+          if (document.getElementById("step4").classList.contains("active")) {
+            startTimer();
+          }
+        });
+
+        document.addEventListener("keypress", function () {
+          if (document.getElementById("step4").classList.contains("active")) {
+            startTimer();
+          }
+        });
+
+        // Initialize date options on page load
+        generateDateOptions();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,120 @@
+/*film content*/
+.flm_container {
+  position: relative;
+  margin: auto;
+}
+.flm_container::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%; /* Adjust this value for how much shading you want */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(0, 0, 0) 100%
+  );
+  pointer-events: none; /* Allows clicking through the overlay */
+  z-index: 1;
+}
+.flm_container img {
+  width: 100%;
+  height: 680px;
+}
+.flm_container1 {
+  position: absolute;
+  top: 150px;
+  left: 100px;
+}
+
+.flm_containerP {
+  position: relative;
+  width: 1300px;
+  height: 200px;
+}
+.flm_containerP h2 {
+  padding-left: 350px;
+  padding-top: 200px;
+  font-size: 50px;
+  color: white;
+  font-family: "Times New Roman", Times, serif;
+  position: relative;
+}
+.flm_containerP p {
+  padding-left: 350px;
+  padding-top: 18px;
+  font-size: 18px;
+  color: white;
+  font-family: "Times New Roman", Times, serif;
+  position: relative;
+}
+.flm_containerP p button {
+  margin: 5px;
+  margin-left: 0;
+  margin-bottom: 10px;
+  background-color: transparent;
+  border-radius: 5px;
+  border: 1.5px solid white;
+  color: white;
+  padding: 5px;
+}
+.flm_containerImg {
+  position: absolute;
+  left: 25px;
+  top: 0;
+}
+.flm_containerImg img {
+  width: 300px;
+  height: 500px;
+}
+.film_explain {
+  display: flex;
+  background-color: black;
+  padding-left: 8%;
+  padding-right: 8%;
+}
+.buttn {
+  width: 25%;
+}
+.bttn_buy button {
+  background-color: transparent;
+  border: none;
+  width: 95%;
+  background-color: #d39503;
+  color: rgb(18, 18, 18);
+  padding: 10px;
+  border-radius: 5px;
+}
+.bttn_buy button a {
+  text-decoration: none;
+  color: silver;
+}
+.bttn_buy button:hover {
+  background-color: transparent;
+  border: 1.5px solid silver;
+  color: #d39503;
+}
+
+.trail_but button {
+  border: none;
+  width: 95%;
+  background-color: silver;
+  color: rgb(18, 18, 18);
+  padding: 10px;
+  border-radius: 5px;
+}
+.buttn .trail_but button a {
+  text-decoration: none;
+  color: silver;
+  border: none;
+}
+.trail_but button:hover {
+  background-color: silver;
+  border: 1.5px solid #d39503;
+  color: black;
+}
+.description {
+  width: 75%;
+  color: aliceblue;
+}
